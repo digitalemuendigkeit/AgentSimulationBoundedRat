@@ -1,7 +1,10 @@
-using PyPlot
+#using PyPlot
 #pygui(true)
 using Statistics
 using Random
+using Plots
+import Gadfly
+using DataFrames
 
 mutable struct Agent
     opinion :: AbstractFloat
@@ -39,10 +42,13 @@ function simulation(agent_count, steps, bounded_rat = 0.2)
 
 
     hist([a.opinion for a in agents])
-    display(gcf())
+    #display(gcf())
+    df = DataFrame(opinions = [a.opinion for a in agents])
+    Gadfly.plot(df, x=:opinions, Gadfly.Geom.point)
+
     (mean([a.opinion for a in agents]), std([a.opinion for a in agents]))
 end
 
 
-@time res = simulation(100000, 10000000, 0.4)
+@time res = simulation(100000, 10000, 0.4)
 println(res)
